@@ -78,4 +78,30 @@ router.post("/", (req,res) => {
         })
 })
 
+router.post("/:id/comments", (req,res) => {
+    if (!req.body.text) {
+        return res.status(400).json({
+            message: "missing comment"
+        })
+    }
+
+    posts.insertComment(req.body)
+        .then((posts) => {
+            if (posts){
+                res.status(201).json(posts)
+            } else {
+                res.status(404).json({
+                    message: "The post with the specified ID does not exist."
+                })
+            }
+            
+        })
+        .catch((error) => {
+            console.log(error)
+            res.status(500).json({
+                message: "error saving comments to the post"
+            })
+        })
+})
+
 module.exports = router
